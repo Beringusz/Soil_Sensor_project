@@ -38,6 +38,24 @@ Solid-state 5-pin sensors apply a static linear multiplier to raw apparent elect
 2. **Multiple Linear Regression (MLR):** Standardized conductivity and volumetric moisture ($\theta_v$) are mapped to a composite Macronutrient Index ($N_{idx}$):
    $$N_{idx} = \beta_0 + \beta_1(EC_{25}) + \beta_2(\theta_v) + \beta_3(EC_{25} \cdot \theta_v)$$
 
+## Experimental Measurements & Results
+
+The pipeline was validated by adding 500 ml of cold water in 100 ml increments to a dry soil sample to evaluate the sensor's transient response and the ATmega328P's local regression model.
+
+### 1. Raw Environmental Transients
+As cold water was introduced, soil temperature dropped from 30.0°C to 23.8°C while volumetric moisture rose from 6% to 22%. Dissolving ionic salts caused Electrical Conductivity (EC) to spike from 0 to over 800 uS/cm, shifting interpolated pH from 6.0 to 6.5.
+
+![Temperature and Moisture Response](Docs/images/tmp_moist.png)
+![Electrical Conductivity and pH Response](Docs/images/EC_PH.png)
+
+### 2. Factory vs. Custom Calibrated NPK
+Because factory firmware applies a static multiplier to raw EC, hydration caused false macronutrient spikes (e.g., factory Potassium jumping from 0 to >200 mg/kg in a sealed sample). The local MLR model extracted the raw registers and constrained the outputs to realistic agronomic ratios (shown on the right Y-axes).
+
+![Phosphorus Comparison](Docs/images/fP_cP.png)
+![Potassium Comparison](Docs/images/fK_cK.png)
+
+*(See [`Docs/images/fN_cN.png`](Docs/images/fN_cN.png) for the Nitrogen comparison curve).*
+
 ## Getting Started
 
 1. Clone the repository and open the firmware file in the Arduino IDE (or compile via `avr-gcc`).
